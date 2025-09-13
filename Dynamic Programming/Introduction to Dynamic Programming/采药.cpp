@@ -16,7 +16,7 @@ int main() {
     // 0-1背包核心逻辑
     for (int i = 1; i <= M; ++i) {  // 遍历每种草药
         // 从后往前遍历时间，避免重复选取同一草药
-        for (int j = time[i];j<=T; j++) {
+        for (int j = T;j>=time[i]; j--) {
             // 状态转移：选当前草药或不选，取最大值
             dp[j] = max(dp[j], dp[j - time[i]] + value[i]);
         }
