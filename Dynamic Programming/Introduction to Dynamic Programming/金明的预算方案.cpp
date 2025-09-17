@@ -1,22 +1,39 @@
 #include<bits/stdc++.h>
 using namespace std;
-int n,m,v1,p1,q1,v[65][3],p[65][3],f[65][32005];
-signed main(){
+int main(){
+	int n,m;
 	cin>>n>>m;
+	vector<vector<int>>g(m+1,vector<int>(2,0)),w(m+1,vector<int>(2,0));
 	for(int i=1;i<=m;i++){
-		cin>>v1>>p1>>q1;
-		if(q1){if(v[q1][1])v[q1][2]=v1,p[q1][2]=p1;else v[q1][1]=v1,p[q1][1]=p1;}
-		else v[i][0]=v1,p[i][0]=p1;
-	}
-	for(int i=1;i<=m;i++){
-		for(int j=0;j<=n;j++){
-            f[i][j]=f[i-1][j];
-			if(v[i][0]<=j)f[i][j]=max(f[i][j],f[i-1][j-v[i][0]]+v[i][0]*p[i][0]);
-			if(v[i][0]+v[i][1]<=j)f[i][j]=max(f[i][j],f[i-1][j-v[i][0]-v[i][1]]+v[i][0]*p[i][0]+v[i][1]*p[i][1]);
-			if(v[i][0]+v[i][2]<=j)f[i][j]=max(f[i][j],f[i-1][j-v[i][0]-v[i][2]]+v[i][0]*p[i][0]+v[i][2]*p[i][2]);
-			if(v[i][0]+v[i][1]+v[i][2]<=j)f[i][j]=max(f[i][j],f[i-1][j-v[i][0]-v[i][1]-v[i][2]]+v[i][0]*p[i][0]+v[i][1]*p[i][1]+v[i][2]*p[i][2]);
+		int v,p,q;
+		cin>>v>>p>>q;
+		if(!q){
+			w[i][0]=v*p,g[i][0]=v;
+		}
+		else {
+			if(w[q][1]) w[q][2]=v*p,g[q][2]=v;
+			else w[q][1]=v*p,g[q][1]=v;
 		}
 	}
-	cout<<f[m][n];
+	vector<int>dp(n+1,0);
+	for(int i=1;i<=m;i++){
+		for(int j=n;j>=0;j--){
+			if(j>=g[i][0]) dp[j]=max(dp[j],dp[j-g[i][0]]+w[i][0]);
+			if(j>=g[i][0]+g[i][1]) dp[j]=max(dp[j],dp[j-g[i][0]-g[i][1]]+w[i][0]+w[i][1]);
+			if(j>=g[i][0]+g[i][2]) dp[j]=max(dp[j],dp[j-g[i][0]-g[i][2]]+w[i][0]+w[i][2]);
+			if(j>=g[i][0]+g[i][1]+g[i][2]) dp[j]=max(dp[j],dp[j-g[i][0]-g[i][1]-g[i][2]]+w[i][0]+w[i][1]+w[i][2]);
+		}
+	}
+	cout<<dp[n];
 	return 0;
 }
+/*
+1000 5
+300 2 0
+400 5 1
+300 5 1
+400 3 0
+500 2 0
+
+
+*/
